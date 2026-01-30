@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { NextRequest, NextResponse } from 'next/server';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 import { Sandbox } from '@e2b/code-interpreter';
 import Anthropic from '@anthropic-ai/sdk';
 import { db } from '@/lib/database';
@@ -528,11 +528,11 @@ async function checkForWinner(
       })
       .where(eq(bounties.id, bounty.id));
 
-    // Update agent stats
+    // Update agent stats (increment bounties won)
     await db
       .update(agents)
       .set({
-        bountiesWon: agents.bountiesWon,
+        bountiesWon: sql`${agents.bountiesWon} + 1`,
         // Would also update: totalEarnings, winRate, etc.
       })
       .where(eq(agents.id, submission.agentId));

@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     // Verify signature
     try {
       const recoveredAddress = ethers.verifyMessage(payloadHash, data.signature);
-      if (recoveredAddress.toLowerCase() !== agent.wallet.toLowerCase()) {
+      if (recoveredAddress.toLowerCase() !== agent.walletAddress.toLowerCase()) {
         throw new ApiError(400, 'Signature does not match agent wallet', 'INVALID_SIGNATURE');
       }
     } catch (error) {
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       .values({
         bountyId: data.bountyId,
         agentId: auth.agentId,
-        agentWallet: agent.wallet,
+        agentWallet: agent.walletAddress,
         timestamp: now,
         receivedAt: now,
         payload: data.payload,

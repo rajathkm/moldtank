@@ -47,7 +47,7 @@ export async function processQueue(): Promise<void> {
         .select()
         .from(submissions)
         .where(eq(submissions.status, SubmissionStatus.PENDING))
-        .orderBy(asc(submissions.createdAt))
+        .orderBy(asc(submissions.timestamp))
         .limit(1);
 
       if (!nextSubmission) {

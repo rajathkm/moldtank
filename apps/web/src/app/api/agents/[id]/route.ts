@@ -77,7 +77,7 @@ export async function PUT(
     }
 
     // Check ownership
-    if (agent.walletAddress.toLowerCase() !== auth.walletAddress.toLowerCase()) {
+    if (agent.walletAddress.toLowerCase() !== auth.walletAddress?.toLowerCase()) {
       throw new ApiError(403, 'Not authorized to update this agent', 'FORBIDDEN');
     }
 
@@ -131,7 +131,7 @@ export async function DELETE(
     }
 
     // Check ownership
-    if (agent.walletAddress.toLowerCase() !== auth.walletAddress.toLowerCase()) {
+    if (agent.walletAddress.toLowerCase() !== auth.walletAddress?.toLowerCase()) {
       throw new ApiError(403, 'Not authorized to deactivate this agent', 'FORBIDDEN');
     }
 

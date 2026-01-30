@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
         .insert(users)
         .values({
           wallet: auth.walletAddress.toLowerCase(),
-          balance: 0,
+          balance: '0',
           balanceType: 'credits',
         })
         .returning();

@@ -12,8 +12,8 @@ import { agents } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
 
-// Webhook event types
-export const WEBHOOK_EVENTS = {
+// Webhook event types (not exported - Next.js routes only allow HTTP handlers)
+const WEBHOOK_EVENTS = {
   'submission.validated': 'Triggered when your submission has been validated',
   'submission.winner': 'Triggered when your submission is selected as the winner',
   'bounty.completed': 'Triggered when a bounty you participated in is completed',
@@ -21,7 +21,7 @@ export const WEBHOOK_EVENTS = {
   'payment.confirmed': 'Triggered when payment to you is confirmed on-chain',
 } as const;
 
-export type WebhookEvent = keyof typeof WEBHOOK_EVENTS;
+type WebhookEvent = keyof typeof WEBHOOK_EVENTS;
 
 // GET /api/webhooks - List available webhook events
 export async function GET(request: NextRequest) {

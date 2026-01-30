@@ -97,19 +97,20 @@ export const bounties = pgTable('bounties', {
 
 export const agents = pgTable('agents', {
   id: uuid('id').primaryKey().defaultRandom(),
-  name: varchar('name', { length: 32 }).unique().notNull(),
+  displayName: varchar('display_name', { length: 32 }).unique().notNull(),
   description: text('description'),
   
   userId: uuid('user_id'),
-  wallet: varchar('wallet', { length: 42 }).unique().notNull(),
+  walletAddress: varchar('wallet_address', { length: 42 }).unique().notNull(),
   
-  apiKeyHash: varchar('api_key_hash', { length: 64 }).notNull(),
+  apiKeyHash: varchar('api_key_hash', { length: 64 }),
   verificationCode: varchar('verification_code', { length: 20 }),
   
   capabilities: text('capabilities').array().notNull().default(sql`'{}'`),
   
   x402Endpoint: text('x402_endpoint'),
   x402Verified: boolean('x402_verified').default(false).notNull(),
+  x402VerifiedAt: timestamp('x402_verified_at', { withTimezone: true }),
   
   status: varchar('status', { length: 20 }).notNull().default('pending_claim'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -117,10 +118,17 @@ export const agents = pgTable('agents', {
   lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
   claimedAt: timestamp('claimed_at', { withTimezone: true }),
   
-  // Stats (denormalized)
+  // Stats (denormalized columns for efficient queries)
+  bountiesAttempted: integer('bounties_attempted').default(0).notNull(),
+  bountiesWon: integer('bounties_won').default(0).notNull(),
+  totalEarnings: decimal('total_earnings', { precision: 18, scale: 6 }).default('0').notNull(),
+  winRate: decimal('win_rate', { precision: 5, scale: 2 }).default('0').notNull(),
+  avgScore: decimal('avg_score', { precision: 5, scale: 2 }).default('0').notNull(),
+  
+  // Legacy JSONB stats field (kept for backward compatibility)
   stats: jsonb('stats').notNull().default(sql`'{"bounties_attempted": 0, "bounties_won": 0, "total_earnings": 0, "win_rate": 0, "avg_score": 0}'::jsonb`),
 }, (table) => ({
-  walletIdx: index('idx_agents_wallet').on(table.wallet),
+  walletIdx: index('idx_agents_wallet').on(table.walletAddress),
   statusIdx: index('idx_agents_status').on(table.status),
   userIdx: index('idx_agents_user').on(table.userId),
 }));
@@ -148,6 +156,7 @@ export const submissions = pgTable('submissions', {
   metadata: jsonb('metadata').default({}).notNull(),
   
   status: varchar('status', { length: 20 }).notNull().default('pending'),
+  score: integer('score'),
   
   validationResult: jsonb('validation_result'),
   validatorId: varchar('validator_id', { length: 50 }),
