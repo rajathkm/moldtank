@@ -5,10 +5,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { bounties } from '@moldtank/database';
+import { bounties } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
-import { BountyStatus, EscrowStatus } from '@moldtank/types';
+import { BountyStatus, EscrowStatus } from '@/types';
 
 // POST /api/bounties/[id]/refund - Request refund
 export async function POST(

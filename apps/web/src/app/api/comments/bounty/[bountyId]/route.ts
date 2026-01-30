@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, and, asc } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { comments, bounties } from '@moldtank/database';
+import { comments, bounties } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 
 // GET /api/comments/bounty/[bountyId] - Get comments for bounty

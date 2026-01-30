@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, asc } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { submissions } from '@moldtank/database';
+import { submissions } from '@/db';
 import { handleApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
 

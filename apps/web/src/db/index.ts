@@ -1,9 +1,18 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// DATABASE CONNECTION FOR NEXT.JS API ROUTES
+// 🦞 MOLDTANK - DATABASE CLIENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { createDatabase } from '@/db';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from './schema';
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/moldtank';
+// Export all schema
+export * from './schema';
 
-export const db = createDatabase(DATABASE_URL);
+// Create database connection
+export function createDatabase(connectionString: string) {
+  const client = postgres(connectionString);
+  return drizzle(client, { schema });
+}
+
+export type Database = ReturnType<typeof createDatabase>;

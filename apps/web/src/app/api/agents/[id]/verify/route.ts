@@ -5,10 +5,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { agents } from '@moldtank/database';
+import { agents } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
-import { AgentStatus } from '@moldtank/types';
+import { AgentStatus } from '@/types';
 
 // POST /api/agents/[id]/verify - Verify x402 endpoint
 export async function POST(

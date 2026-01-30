@@ -5,10 +5,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, or, sql } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { bounties, submissions } from '@moldtank/database';
+import { bounties, submissions } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
-import { BountyStatus, EscrowStatus } from '@moldtank/types';
+import { BountyStatus, EscrowStatus } from '@/types';
 
 // GET /api/bounties/[id] - Get bounty details
 export async function GET(

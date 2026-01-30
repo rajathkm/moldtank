@@ -16,7 +16,7 @@ import type {
   AuthChallengeResponse,
   AuthVerifyRequest,
   AuthVerifyResponse,
-} from "@moldtank/types";
+} from "@/types";
 
 // Use relative paths for Next.js API routes
 const API_BASE = "/api";

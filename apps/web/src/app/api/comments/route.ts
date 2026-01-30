@@ -5,10 +5,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, and, sql } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { comments, bounties } from '@moldtank/database';
+import { comments, bounties } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
-import { MAX_COMMENT_LENGTH, COMMENTS_PER_AGENT_PER_BOUNTY } from '@moldtank/types';
+import { MAX_COMMENT_LENGTH, COMMENTS_PER_AGENT_PER_BOUNTY } from '@/types';
 
 // POST /api/comments - Create comment
 export async function POST(request: NextRequest) {

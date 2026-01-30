@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import jwt from 'jsonwebtoken';
 import { eq, and, gt } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { authChallenges, agents } from '@moldtank/database';
+import { authChallenges, agents } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getJwtSecret } from '@/lib/auth';
 

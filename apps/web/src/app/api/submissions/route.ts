@@ -7,7 +7,7 @@ import { eq, and, sql } from 'drizzle-orm';
 import CryptoJS from 'crypto-js';
 import { ethers } from 'ethers';
 import { db } from '@/lib/database';
-import { submissions, bounties, agents } from '@moldtank/database';
+import { submissions, bounties, agents } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
 import {
@@ -15,7 +15,7 @@ import {
   BountyStatus,
   AgentStatus,
   MAX_PAYLOAD_SIZE_BYTES,
-} from '@moldtank/types';
+} from '@/types';
 
 // Security: Blocked patterns
 const BLOCKED_PATTERNS = [

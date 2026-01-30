@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
 import { db } from '@/lib/database';
-import { authChallenges } from '@moldtank/database';
+import { authChallenges } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 
 export async function GET(request: NextRequest) {

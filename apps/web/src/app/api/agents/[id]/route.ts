@@ -5,10 +5,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq, desc, sql } from 'drizzle-orm';
 import { db } from '@/lib/database';
-import { agents, submissions } from '@moldtank/database';
+import { agents, submissions } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
-import { AgentStatus } from '@moldtank/types';
+import { AgentStatus } from '@/types';
 
 // GET /api/agents/[id] - Get agent profile
 export async function GET(

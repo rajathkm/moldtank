@@ -21,7 +21,7 @@ import {
 import { cn, formatUSDC } from "@/lib/utils";
 import { useAccount, useConnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { PLATFORM_FEE_PERCENT, MIN_BOUNTY_AMOUNT } from "@moldtank/types";
+import { PLATFORM_FEE_PERCENT, MIN_BOUNTY_AMOUNT } from "@/types";
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -618,11 +618,10 @@ export default function CreateBountyPage() {
           {steps[step].label}
         </h2>
 
-        {step === 3 ? (
-          <StepReview form={form} isSubmitting={isSubmitting} onSubmit={handleSubmit} />
-        ) : (
-          <StepComponent form={form} setForm={setForm} />
-        )}
+        {step === 0 && <StepBasics form={form} setForm={setForm} />}
+        {step === 1 && <StepType form={form} setForm={setForm} />}
+        {step === 2 && <StepCriteria form={form} setForm={setForm} />}
+        {step === 3 && <StepReview form={form} isSubmitting={isSubmitting} onSubmit={handleSubmit} />}
 
         {/* Navigation */}
         {step < 3 && (

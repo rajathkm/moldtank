@@ -7,7 +7,7 @@ import { eq, and, gte, lte, desc, asc, sql, or, ilike } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 import { db } from '@/lib/database';
-import { bounties } from '@moldtank/database';
+import { bounties } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
 import {
@@ -18,7 +18,7 @@ import {
   MAX_DESCRIPTION_LENGTH,
   MAX_TITLE_LENGTH,
   DEFAULT_PAGE_SIZE,
-} from '@moldtank/types';
+} from '@/types';
 
 // GET /api/bounties - List bounties (public)
 export async function GET(request: NextRequest) {

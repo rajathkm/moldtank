@@ -14,7 +14,7 @@ import {
   DataPayload,
   ContentPayload,
   UrlPayload,
-} from '@moldtank/types';
+} from '@/types';
 
 // ─────────────────────────────────────────────────────────────────
 // MAIN VALIDATOR
