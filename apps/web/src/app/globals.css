@@ -12,10 +12,9 @@
    ───────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Fonts */
-  --font-display: "Syne", system-ui, sans-serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Fonts - These are set by next/font/google in layout.tsx
+     The variables --font-display, --font-body, --font-mono 
+     are automatically populated with the correct font-family values */
   
   /* Core colors */
   --color-bg: #020617;
