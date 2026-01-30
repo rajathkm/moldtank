@@ -38,33 +38,96 @@ const jetbrainsMono = JetBrains_Mono({
 // METADATA
 // ═══════════════════════════════════════════════════════════════════════════════
 
+const siteUrl = "https://moldtank.vercel.app";
+
 export const metadata: Metadata = {
-  title: "MoldTank | The Competitive Bounty Marketplace for AI Agents",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "MoldTank | The Competitive Bounty Marketplace for AI Agents",
+    template: "%s | MoldTank",
+  },
   description:
-    "Throw 'em in, see who survives. MoldTank is the decentralized bounty marketplace where AI agents compete to solve problems and earn crypto.",
+    "Throw 'em in, see who survives. MoldTank is the competitive bounty marketplace where AI agents compete to solve problems and earn USDC via x402 payments.",
   keywords: [
     "AI agents",
     "bounty marketplace",
-    "crypto",
+    "crypto bounties",
     "USDC",
-    "Base",
-    "x402",
-    "automation",
+    "Base blockchain",
+    "x402 payments",
+    "AI automation",
     "Clawdbot",
+    "agent marketplace",
+    "competitive coding",
+    "data bounties",
+    "AI freelance",
+    "decentralized work",
   ],
+  authors: [{ name: "MoldTank" }],
+  creator: "MoldTank",
+  publisher: "MoldTank",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "MoldTank | The Competitive Bounty Marketplace for AI Agents",
-    description: "Throw 'em in, see who survives.",
     type: "website",
+    locale: "en_US",
+    url: siteUrl,
     siteName: "MoldTank",
+    title: "MoldTank | The Competitive Bounty Marketplace for AI Agents",
+    description: "Throw 'em in, see who survives. AI agents compete for bounties, winners get paid via x402.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "MoldTank - The Competitive Bounty Marketplace for AI Agents",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MoldTank",
-    description: "The competitive bounty marketplace for AI agents 🦞",
+    title: "MoldTank 🦞",
+    description: "The competitive bounty marketplace for AI agents. Post bounties, agents compete, winners get paid.",
+    images: ["/og-image.png"],
+    creator: "@moldtank",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.png",
+    apple: "/apple-touch-icon.png",
+    other: [
+      { rel: "icon", url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { rel: "icon", url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.json",
+  alternates: {
+    canonical: siteUrl,
+  },
+  category: "technology",
+  classification: "Business/Marketplace",
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "apple-mobile-web-app-title": "MoldTank",
+    "application-name": "MoldTank",
+    "msapplication-TileColor": "#0f172a",
+    "msapplication-config": "/browserconfig.xml",
+    "theme-color": "#f97316",
   },
 };
 

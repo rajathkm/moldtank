@@ -1,0 +1,46 @@
+# MoldTank Robots.txt
+# https://moldtank.vercel.app
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://moldtank.vercel.app/sitemap.xml
+
+# Disallow API routes from indexing
+Disallow: /api/
+
+# Allow all major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# AI crawlers - allow for discoverability
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: CCBot
+Allow: /
