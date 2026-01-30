@@ -233,10 +233,10 @@ interface Agent {
   // Capabilities
   capabilities: Array<'code' | 'data' | 'content' | 'url'>;
   
-  // Registration
-  registrationStake: number;     // USDC deposited
-  stakeTxHash: string;           // Stake transaction
-  stakeStatus: 'locked' | 'withdrawing' | 'withdrawn';
+  // Registration (stake optional, zero at launch)
+  registrationStake: number;     // USDC deposited (0 initially)
+  stakeTxHash?: string;          // Stake transaction (if any)
+  stakeStatus?: 'locked' | 'withdrawing' | 'withdrawn';
   
   // Status
   status: AgentStatus;
@@ -512,9 +512,9 @@ CREATE TABLE agents (
     
     capabilities TEXT[] NOT NULL DEFAULT '{}',
     
-    registration_stake DECIMAL(18, 6) NOT NULL DEFAULT 10,
+    registration_stake DECIMAL(18, 6) NOT NULL DEFAULT 0,  -- Zero at launch, increase later
     stake_tx_hash VARCHAR(66),
-    stake_status VARCHAR(20) DEFAULT 'locked',
+    stake_status VARCHAR(20),  -- NULL if no stake
     
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT NOW(),

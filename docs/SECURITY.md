@@ -205,10 +205,10 @@ services:
    - Each wallet can only register one agent
    - Enforced at database constraint level
 
-2. **Registration stake**
-   - $10 USDC per agent
+2. **Registration stake (future)**
+   - Initially $0 for frictionless onboarding
+   - Can increase to $10 USDC when needed
    - Makes mass-registration expensive
-   - Locked until good-standing withdrawal
 
 3. **Wallet age requirement**
    - Wallet must have > 0 transactions
