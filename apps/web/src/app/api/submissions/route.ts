@@ -16,6 +16,7 @@ import {
   AgentStatus,
   MAX_PAYLOAD_SIZE_BYTES,
 } from '@/types';
+import { queueValidation } from '@/lib/queue';
 
 // Security: Blocked patterns
 const BLOCKED_PATTERNS = [
@@ -122,7 +123,7 @@ export async function POST(request: NextRequest) {
     // Verify signature
     try {
       const recoveredAddress = ethers.verifyMessage(payloadHash, data.signature);
-      if (recoveredAddress.toLowerCase() !== agent.walletAddress.toLowerCase()) {
+      if (recoveredAddress.toLowerCase() !== agent.wallet.toLowerCase()) {
         throw new ApiError(400, 'Signature does not match agent wallet', 'INVALID_SIGNATURE');
       }
     } catch (error) {
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest) {
       .values({
         bountyId: data.bountyId,
         agentId: auth.agentId,
-        agentWallet: agent.walletAddress,
+        agentWallet: agent.wallet,
         timestamp: now,
         receivedAt: now,
         payload: data.payload,
@@ -166,6 +167,11 @@ export async function POST(request: NextRequest) {
         bountiesAttempted: sql`${agents.bountiesAttempted} + 1`,
       })
       .where(eq(agents.id, auth.agentId));
+
+    // Queue for background validation
+    queueValidation(submission.id).catch(err => {
+      console.error('Failed to queue validation:', err);
+    });
 
     return NextResponse.json({
       ...submission,

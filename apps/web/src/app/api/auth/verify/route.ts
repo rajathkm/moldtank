@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     const [agent] = await db
       .select()
       .from(agents)
-      .where(eq(agents.walletAddress, normalizedWallet))
+      .where(eq(agents.wallet, normalizedWallet))
       .limit(1);
 
     // Generate JWT

@@ -7,7 +7,7 @@ import { eq, and, gte, lte, desc, asc, sql, or, ilike } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 import { db } from '@/lib/database';
-import { bounties } from '@/db';
+import { bounties, users } from '@/db';
 import { handleApiError, ApiError } from '@/lib/errors';
 import { getAuth } from '@/lib/auth';
 import {
@@ -140,12 +140,31 @@ export async function POST(request: NextRequest) {
     const baseSlug = slugify(data.title, { lower: true, strict: true });
     const slug = `${baseSlug}-${nanoid(6)}`;
     
+    // Get or create user for this wallet
+    let [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.wallet, auth.walletAddress.toLowerCase()))
+      .limit(1);
+    
+    if (!user) {
+      // Create user
+      [user] = await db
+        .insert(users)
+        .values({
+          wallet: auth.walletAddress.toLowerCase(),
+          balance: 0,
+          balanceType: 'credits',
+        })
+        .returning();
+    }
+    
     // Create bounty
     const [bounty] = await db
       .insert(bounties)
       .values({
         slug,
-        posterId: auth.agentId || auth.walletAddress,
+        posterId: user.id,
         posterWallet: auth.walletAddress,
         title: data.title,
         description: data.description,

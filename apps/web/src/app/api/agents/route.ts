@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     const [existing] = await db
       .select()
       .from(agents)
-      .where(eq(agents.walletAddress, auth.walletAddress))
+      .where(eq(agents.wallet, auth.walletAddress))
       .limit(1);
 
     if (existing) {

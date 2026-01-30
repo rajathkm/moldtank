@@ -19,6 +19,32 @@ import {
 import { sql } from 'drizzle-orm';
 
 // ─────────────────────────────────────────────────────────────────
+// USERS TABLE
+// ─────────────────────────────────────────────────────────────────
+
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: varchar('email', { length: 255 }).unique(),
+  wallet: varchar('wallet', { length: 42 }).unique(),
+  
+  balance: decimal('balance', { precision: 18, scale: 6 }).notNull().default('0'),
+  balanceType: varchar('balance_type', { length: 20 }).notNull().default('credits'),
+  
+  displayName: varchar('display_name', { length: 64 }),
+  avatarUrl: text('avatar_url'),
+  
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  lastActiveAt: timestamp('last_active_at', { withTimezone: true }).defaultNow(),
+}, (table) => ({
+  emailIdx: index('idx_users_email').on(table.email),
+  walletIdx: index('idx_users_wallet').on(table.wallet),
+}));
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+
+// ─────────────────────────────────────────────────────────────────
 // BOUNTIES TABLE
 // ─────────────────────────────────────────────────────────────────
 
@@ -71,38 +97,32 @@ export const bounties = pgTable('bounties', {
 
 export const agents = pgTable('agents', {
   id: uuid('id').primaryKey().defaultRandom(),
-  displayName: varchar('display_name', { length: 32 }).unique().notNull(),
+  name: varchar('name', { length: 32 }).unique().notNull(),
+  description: text('description'),
   
-  ownerId: uuid('owner_id'),
+  userId: uuid('user_id'),
+  wallet: varchar('wallet', { length: 42 }).unique().notNull(),
   
-  walletAddress: varchar('wallet_address', { length: 42 }).unique().notNull(),
-  
-  x402Endpoint: text('x402_endpoint').notNull(),
-  x402Verified: boolean('x402_verified').default(false).notNull(),
-  x402VerifiedAt: timestamp('x402_verified_at', { withTimezone: true }),
+  apiKeyHash: varchar('api_key_hash', { length: 64 }).notNull(),
+  verificationCode: varchar('verification_code', { length: 20 }),
   
   capabilities: text('capabilities').array().notNull().default(sql`'{}'`),
   
-  registrationStake: decimal('registration_stake', { precision: 18, scale: 6 }).notNull().default('0'),
-  stakeTxHash: varchar('stake_tx_hash', { length: 66 }),
-  stakeStatus: varchar('stake_status', { length: 20 }),
+  x402Endpoint: text('x402_endpoint'),
+  x402Verified: boolean('x402_verified').default(false).notNull(),
   
-  status: varchar('status', { length: 20 }).notNull().default('pending'),
+  status: varchar('status', { length: 20 }).notNull().default('pending_claim'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-  lastActiveAt: timestamp('last_active_at', { withTimezone: true }).defaultNow().notNull(),
+  lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
+  claimedAt: timestamp('claimed_at', { withTimezone: true }),
   
-  // Reputation metrics (denormalized for performance)
-  bountiesAttempted: integer('bounties_attempted').default(0).notNull(),
-  bountiesWon: integer('bounties_won').default(0).notNull(),
-  winRate: decimal('win_rate', { precision: 5, scale: 4 }).default('0').notNull(),
-  totalEarnings: decimal('total_earnings', { precision: 18, scale: 6 }).default('0').notNull(),
-  avgTimeToSolve: integer('avg_time_to_solve').default(0).notNull(),
-  qaPassRate: decimal('qa_pass_rate', { precision: 5, scale: 4 }).default('0').notNull(),
+  // Stats (denormalized)
+  stats: jsonb('stats').notNull().default(sql`'{"bounties_attempted": 0, "bounties_won": 0, "total_earnings": 0, "win_rate": 0, "avg_score": 0}'::jsonb`),
 }, (table) => ({
-  walletIdx: index('idx_agents_wallet').on(table.walletAddress),
+  walletIdx: index('idx_agents_wallet').on(table.wallet),
   statusIdx: index('idx_agents_status').on(table.status),
-  earningsIdx: index('idx_agents_earnings').on(table.totalEarnings),
+  userIdx: index('idx_agents_user').on(table.userId),
 }));
 
 // ─────────────────────────────────────────────────────────────────
