@@ -8,20 +8,9 @@
     "build": "cd apps/web && npm run build",
     "start": "cd apps/web && npm run start",
     "lint": "cd apps/web && npm run lint",
-    "db:generate": "cd packages/database && npm run generate",
-    "db:migrate": "cd packages/database && npm run migrate",
-    "db:push": "cd packages/database && npm run push",
-    "db:studio": "cd packages/database && npm run studio",
-    "postinstall": "npm install --prefix apps/web && npm install --prefix packages/database && npm install --prefix packages/types"
+    "postinstall": "npm install --prefix apps/web"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "devDependencies": {
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "drizzle-orm": "^0.45.1"
   }
 }

@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@moldtank/types"],
-  experimental: {
-    // Enable server actions
-  },
   images: {
     remotePatterns: [
       {
