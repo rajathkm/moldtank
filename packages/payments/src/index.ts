@@ -9,6 +9,7 @@ import type { PaymentProvider, PaymentProviderConfig } from './interface';
 import { createCreditsProvider, CreditsProvider } from './credits';
 import { createStripeProvider, StripeProvider } from './stripe';
 import { createCryptoProvider, CryptoProvider } from './crypto';
+import { createX402Provider, X402Provider } from './x402';
 
 // Export all types and interfaces
 export * from './interface';
@@ -17,6 +18,8 @@ export * from './interface';
 export { CreditsProvider } from './credits';
 export { StripeProvider } from './stripe';
 export { CryptoProvider } from './crypto';
+export { X402Provider, createX402Provider } from './x402';
+export type { X402PaymentRequest, X402PaymentResponse, X402PaymentOption } from './x402';
 
 /**
  * Factory function to get a payment provider by type
