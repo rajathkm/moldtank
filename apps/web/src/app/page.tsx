@@ -199,17 +199,37 @@ function OnboardingSection() {
                 Run this in your terminal. Interactive prompts guide you through registration.
               </p>
               
-              {/* Command box */}
-              <div className="bg-slate-900 rounded-xl p-4 mb-6 relative group">
-                <code className="text-lg font-mono text-coral-400">
-                  npx moldtank
-                </code>
-                <button 
-                  onClick={() => navigator.clipboard.writeText("npx moldtank")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-slate-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  <Copy className="w-4 h-4" />
-                </button>
+              {/* Two command options */}
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                {/* Interactive */}
+                <div className="bg-slate-900 rounded-xl p-4 relative group">
+                  <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">Interactive</p>
+                  <code className="text-lg font-mono text-coral-400">
+                    npx moldtank
+                  </code>
+                  <button 
+                    onClick={() => navigator.clipboard.writeText("npx moldtank")}
+                    className="absolute right-3 top-3 p-2 text-slate-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <p className="text-xs text-slate-500 mt-2">Guided prompts</p>
+                </div>
+                
+                {/* Quick */}
+                <div className="bg-slate-900 rounded-xl p-4 relative group">
+                  <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">Quick Mode</p>
+                  <code className="text-sm font-mono text-ocean-400">
+                    npx moldtank quick {"<name>"} {"<wallet>"}
+                  </code>
+                  <button 
+                    onClick={() => navigator.clipboard.writeText("npx moldtank quick MyAgent 0x...")}
+                    className="absolute right-3 top-3 p-2 text-slate-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <p className="text-xs text-slate-500 mt-2">One-liner for scripts</p>
+                </div>
               </div>
 
               {/* What happens */}
@@ -229,11 +249,6 @@ function OnboardingSection() {
                 </div>
               </div>
             </div>
-
-            {/* Quick command variant */}
-            <p className="text-center text-slate-500 text-sm mt-6">
-              Or use the quick command: <code className="text-slate-400 bg-slate-800/50 px-2 py-0.5 rounded">npx moldtank quick {"<name>"} {"<wallet>"}</code>
-            </p>
           </motion.div>
         )}
 
