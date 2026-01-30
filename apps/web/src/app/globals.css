@@ -1,0 +1,319 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   🦞 MOLDTANK GLOBAL STYLES
+   Ocean/Lobster Theme - Deep Blues, Coral Accents
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Primary palette */
+  --ocean-deep: #020617;
+  --ocean-dark: #0c4a6e;
+  --ocean-mid: #0ea5e9;
+  --coral-bright: #f97316;
+  --coral-glow: #fb923c;
+  --shell-pink: #d946ef;
+  
+  /* Fonts */
+  --font-display: "Space Grotesk", "Satoshi", system-ui;
+  --font-body: "Inter", "DM Sans", system-ui;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace;
+}
+
+/* Base dark theme */
+html {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-abyss-950 text-abyss-100;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  @apply bg-coral-500/30 text-coral-100;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-abyss-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-ocean-800 rounded-full;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-ocean-700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════════════════════════ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  @apply font-semibold tracking-tight;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-ocean-400 via-coral-400 to-shell-400;
+}
+
+.text-gradient-coral {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-coral-400 to-coral-600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════════════════════════════ */
+
+/* Glass morphism card */
+.glass-card {
+  @apply bg-abyss-900/50 backdrop-blur-xl border border-abyss-700/50;
+  @apply rounded-2xl shadow-card;
+}
+
+.glass-card-hover {
+  @apply glass-card transition-all duration-300;
+  @apply hover:bg-abyss-800/50 hover:border-ocean-600/30 hover:shadow-card-hover;
+}
+
+/* Ocean gradient background */
+.bg-ocean-depth {
+  background: linear-gradient(180deg, 
+    #0c4a6e 0%, 
+    #082f49 25%, 
+    #020617 60%, 
+    #020617 100%
+  );
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #0ea5e9, #d946ef, #f97316);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* Glow effects */
+.glow-ocean {
+  box-shadow: 0 0 40px rgba(14, 165, 233, 0.15);
+}
+
+.glow-coral {
+  box-shadow: 0 0 40px rgba(249, 115, 22, 0.2);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
+  @apply bg-gradient-to-r from-coral-500 to-coral-600;
+  @apply text-white font-semibold;
+  @apply transition-all duration-300;
+  @apply hover:from-coral-400 hover:to-coral-500;
+  @apply hover:shadow-glow-coral;
+  @apply active:scale-[0.98];
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-xl;
+  @apply bg-abyss-800 border border-abyss-700;
+  @apply text-abyss-100 font-medium;
+  @apply transition-all duration-300;
+  @apply hover:bg-abyss-700 hover:border-ocean-600/50;
+  @apply active:scale-[0.98];
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg;
+  @apply text-abyss-300 font-medium;
+  @apply transition-colors duration-200;
+  @apply hover:text-abyss-100 hover:bg-abyss-800/50;
+}
+
+/* Input styles */
+.input {
+  @apply w-full px-4 py-3 rounded-xl;
+  @apply bg-abyss-900 border border-abyss-700;
+  @apply text-abyss-100 placeholder:text-abyss-500;
+  @apply transition-all duration-200;
+  @apply focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-500/20;
+}
+
+.input-error {
+  @apply border-coral-500 focus:border-coral-500 focus:ring-coral-500/20;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-ocean {
+  @apply bg-ocean-500/20 text-ocean-300 border border-ocean-500/30;
+}
+
+.badge-coral {
+  @apply bg-coral-500/20 text-coral-300 border border-coral-500/30;
+}
+
+.badge-kelp {
+  @apply bg-kelp-500/20 text-kelp-300 border border-kelp-500/30;
+}
+
+.badge-shell {
+  @apply bg-shell-500/20 text-shell-300 border border-shell-500/30;
+}
+
+/* Status indicators */
+.status-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-dot-open {
+  @apply bg-kelp-400 shadow-[0_0_8px_rgba(74,222,128,0.5)];
+}
+
+.status-dot-progress {
+  @apply bg-ocean-400 shadow-[0_0_8px_rgba(14,165,233,0.5)] animate-pulse;
+}
+
+.status-dot-completed {
+  @apply bg-coral-400;
+}
+
+.status-dot-expired {
+  @apply bg-abyss-500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(14, 165, 233, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Floating animation for decorative elements */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-delayed {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Wave animation for ocean effect */
+.wave {
+  animation: wave 10s linear infinite;
+}
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DECORATIVE ELEMENTS
+═══════════════════════════════════════════════════════════════ */
+
+/* Ocean mesh background */
+.ocean-mesh {
+  background-image:
+    radial-gradient(at 40% 20%, hsla(200, 100%, 30%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, hsla(189, 100%, 25%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, hsla(355, 100%, 50%, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, hsla(200, 100%, 30%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(280, 100%, 30%, 0.1) 0px, transparent 50%);
+}
+
+/* Noise texture overlay */
+.noise {
+  position: relative;
+}
+
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Lobster emoji decoration */
+.lobster-icon {
+  display: inline-block;
+  font-size: 1.5em;
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.4));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE UTILITIES
+═══════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .container-narrow {
+    @apply max-w-3xl mx-auto px-4;
+  }
+  
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  @apply outline-none ring-2 ring-ocean-500 ring-offset-2 ring-offset-abyss-950;
+}
