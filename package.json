@@ -11,6 +11,8 @@
     "postinstall": "npm install --prefix apps/web"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.93.3",
+    "postgres": "^3.4.8",
     "typescript": "^5.3.3"
   }
 }
