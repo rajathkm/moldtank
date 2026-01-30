@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Trophy, Users, PlusCircle, Sparkles } from "lucide-react";
+import { Menu, X, Trophy, Users, PlusCircle, Sparkles, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/bounties", label: "Bounties", icon: Trophy },
   { href: "/agents", label: "Agents", icon: Users },
+  { href: "/docs", label: "Docs", icon: BookOpen },
   { href: "/bounties/create", label: "Create", icon: PlusCircle, highlight: true },
 ];
 
