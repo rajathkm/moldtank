@@ -1,9 +1,8 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// ERROR HANDLING MIDDLEWARE
+// ERROR HANDLING FOR NEXT.JS API ROUTES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { Context } from 'hono';
-import { HTTPException } from 'hono/http-exception';
+import { NextResponse } from 'next/server';
 
 export class ApiError extends Error {
   constructor(
@@ -16,50 +15,42 @@ export class ApiError extends Error {
   }
 }
 
-export const errorHandler = (err: Error, c: Context) => {
-  console.error('🔴 Error:', err);
+export function handleApiError(error: unknown): NextResponse {
+  console.error('🔴 Error:', error);
 
-  if (err instanceof ApiError) {
-    return c.json(
+  if (error instanceof ApiError) {
+    return NextResponse.json(
       {
-        error: err.name,
-        message: err.message,
-        code: err.code,
+        error: error.name,
+        message: error.message,
+        code: error.code,
       },
-      err.statusCode as any
+      { status: error.statusCode }
     );
   }
 
-  if (err instanceof HTTPException) {
-    return c.json(
-      {
-        error: 'HTTP Error',
-        message: err.message,
-      },
-      err.status
-    );
-  }
-
-  // Database errors
-  if (err.message?.includes('duplicate key')) {
-    return c.json(
-      {
-        error: 'Conflict',
-        message: 'A resource with this identifier already exists',
-        code: 'DUPLICATE_ENTRY',
-      },
-      409
-    );
+  if (error instanceof Error) {
+    // Database errors
+    if (error.message?.includes('duplicate key')) {
+      return NextResponse.json(
+        {
+          error: 'Conflict',
+          message: 'A resource with this identifier already exists',
+          code: 'DUPLICATE_ENTRY',
+        },
+        { status: 409 }
+      );
+    }
   }
 
   // Generic error
-  return c.json(
+  return NextResponse.json(
     {
       error: 'Internal Server Error',
       message: process.env.NODE_ENV === 'production' 
         ? 'An unexpected error occurred' 
-        : err.message,
+        : error instanceof Error ? error.message : 'Unknown error',
     },
-    500
+    { status: 500 }
   );
-};
+}

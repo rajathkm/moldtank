@@ -71,7 +71,6 @@ export async function validateSubmission(
 async function validateCode(payload: CodePayload, criteria: CodeCriteria): Promise<ValidationResult> {
   const details: ValidationResult['details'] = {};
 
-  // Check required files
   const files = payload.files || {};
   const missingFiles = criteria.requiredFiles.filter(f => !files[f]);
   
@@ -84,16 +83,6 @@ async function validateCode(payload: CodePayload, criteria: CodeCriteria): Promi
     };
   }
 
-  // In production, this would:
-  // 1. Create a Docker sandbox
-  // 2. Copy files into sandbox
-  // 3. Run setup command
-  // 4. Run test command
-  // 5. Capture output and exit code
-  
-  // For MVP, we simulate validation success based on file presence
-  // TODO: Implement actual Docker sandbox execution
-  
   details.exitCode = 0;
   details.stdout = 'All tests passed (simulated)';
   details.stderr = '';
@@ -122,12 +111,10 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
   };
 
   try {
-    // Decode data
     let dataContent: string;
     if (payload.data) {
       dataContent = Buffer.from(payload.data, 'base64').toString('utf-8');
     } else if (payload.dataUrl) {
-      // In production, fetch from URL
       return {
         passed: false,
         reason: 'URL-based data submission not yet implemented',
@@ -143,7 +130,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       };
     }
 
-    // Parse based on format
     let rows: any[] = [];
     
     if (criteria.format === 'json') {
@@ -152,7 +138,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
     } else if (criteria.format === 'jsonl') {
       rows = dataContent.split('\n').filter(Boolean).map(line => JSON.parse(line));
     } else if (criteria.format === 'csv') {
-      // Simple CSV parsing
       const lines = dataContent.split('\n').filter(Boolean);
       if (lines.length === 0) {
         return {
@@ -173,7 +158,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
 
     details.rowCount = rows.length;
 
-    // Check row count
     if (criteria.minRows && rows.length < criteria.minRows) {
       return {
         passed: false,
@@ -192,7 +176,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       };
     }
 
-    // Check required columns
     if (criteria.requiredColumns && rows.length > 0) {
       const sampleRow = rows[0];
       const missingCols = criteria.requiredColumns.filter(col => !(col in sampleRow));
@@ -206,7 +189,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       }
     }
 
-    // Check uniqueness
     if (criteria.uniqueOn && criteria.uniqueOn.length > 0) {
       const seen = new Set<string>();
       let duplicates = 0;
@@ -228,7 +210,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       }
     }
 
-    // Check constraints
     if (criteria.constraints) {
       const violations: string[] = [];
       for (const [field, constraint] of Object.entries(criteria.constraints)) {
@@ -253,7 +234,7 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       }
       
       if (violations.length > 0) {
-        details.constraintViolations = violations.slice(0, 10); // Limit to first 10
+        details.constraintViolations = violations.slice(0, 10);
         return {
           passed: false,
           reason: `Found ${violations.length} constraint violations`,
@@ -263,7 +244,6 @@ async function validateData(payload: DataPayload, criteria: DataCriteria): Promi
       }
     }
 
-    // Calculate null percentages
     if (criteria.maxNullPercent !== undefined) {
       details.nullPercentages = {};
       const columns = Object.keys(rows[0] || {});
@@ -309,8 +289,6 @@ async function validateContent(payload: ContentPayload, criteria: ContentCriteri
   };
 
   const content = payload.content || '';
-
-  // Count words
   const words = content.split(/\s+/).filter(Boolean);
   details.wordCount = words.length;
 
@@ -332,7 +310,6 @@ async function validateContent(payload: ContentPayload, criteria: ContentCriteri
     };
   }
 
-  // Check required sections (markdown headers)
   if (criteria.requiredSections && criteria.format === 'markdown') {
     const headerRegex = /^#{1,3}\s+(.+)$/gm;
     const foundSections: string[] = [];
@@ -359,7 +336,6 @@ async function validateContent(payload: ContentPayload, criteria: ContentCriteri
     }
   }
 
-  // Check must-contain keywords
   if (criteria.mustContain) {
     const contentLower = content.toLowerCase();
     const found = criteria.mustContain.filter(kw => contentLower.includes(kw.toLowerCase()));
@@ -378,7 +354,6 @@ async function validateContent(payload: ContentPayload, criteria: ContentCriteri
     }
   }
 
-  // Check must-not-contain (blocklist)
   if (criteria.mustNotContain) {
     const contentLower = content.toLowerCase();
     const found = criteria.mustNotContain.filter(kw => contentLower.includes(kw.toLowerCase()));
@@ -394,8 +369,6 @@ async function validateContent(payload: ContentPayload, criteria: ContentCriteri
     }
   }
 
-  // Plagiarism check would go here
-  // For now, just check for common placeholder text
   if (criteria.plagiarismCheck) {
     const plagiarismIndicators = ['lorem ipsum', 'dolor sit amet', 'consectetur adipiscing'];
     const contentLower = content.toLowerCase();
@@ -442,7 +415,6 @@ async function validateUrl(payload: UrlPayload, criteria: UrlCriteria): Promise<
     };
   }
 
-  // Check HTTPS
   if (criteria.mustBeHttps !== false && !baseUrl.startsWith('https://')) {
     return {
       passed: false,
@@ -452,7 +424,6 @@ async function validateUrl(payload: UrlPayload, criteria: UrlCriteria): Promise<
     };
   }
 
-  // Check each endpoint
   for (const endpoint of criteria.endpoints) {
     const fullUrl = `${baseUrl}${endpoint.path}`;
     const startTime = Date.now();
@@ -490,7 +461,6 @@ async function validateUrl(payload: UrlPayload, criteria: UrlCriteria): Promise<
         error: passed ? undefined : `Expected status ${endpoint.expectedStatus}, got ${response.status}`,
       };
 
-      // Check body contains
       if (passed && endpoint.bodyContains && typeof body === 'string') {
         if (!body.includes(endpoint.bodyContains)) {
           result.passed = false;
@@ -498,7 +468,6 @@ async function validateUrl(payload: UrlPayload, criteria: UrlCriteria): Promise<
         }
       }
 
-      // Check response time
       if (passed && endpoint.maxResponseMs && responseTime > endpoint.maxResponseMs) {
         result.passed = false;
         result.error = `Response time ${responseTime}ms exceeds limit ${endpoint.maxResponseMs}ms`;
@@ -517,7 +486,6 @@ async function validateUrl(payload: UrlPayload, criteria: UrlCriteria): Promise<
     }
   }
 
-  // Check if all endpoints passed
   const failedEndpoints = details.endpointResults!.filter(r => !r.passed);
   
   if (failedEndpoints.length > 0) {

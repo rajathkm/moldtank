@@ -18,7 +18,8 @@ import type {
   AuthVerifyResponse,
 } from "@moldtank/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+// Use relative paths for Next.js API routes
+const API_BASE = "/api";
 
 // ─────────────────────────────────────────────────────────────────
 // BASE FETCH HELPER
@@ -41,7 +42,7 @@ async function apiFetch<T>(
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,
   });
@@ -60,11 +61,11 @@ async function apiFetch<T>(
 
 export const auth = {
   async getChallenge(walletAddress: string): Promise<AuthChallengeResponse> {
-    return apiFetch(`/api/v1/auth/challenge?walletAddress=${walletAddress}`);
+    return apiFetch(`/auth/challenge?walletAddress=${walletAddress}`);
   },
 
   async verify(data: AuthVerifyRequest): Promise<AuthVerifyResponse> {
-    const result = await apiFetch<AuthVerifyResponse>("/api/v1/auth/verify", {
+    const result = await apiFetch<AuthVerifyResponse>("/auth/verify", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -78,7 +79,7 @@ export const auth = {
   },
 
   async me(): Promise<{ agentId?: string; walletAddress: string; agent?: Agent }> {
-    return apiFetch("/api/v1/auth/me");
+    return apiFetch("/auth/me");
   },
 
   logout() {
@@ -100,41 +101,41 @@ export const bounties = {
         if (value !== undefined) params.append(key, String(value));
       });
     }
-    return apiFetch(`/api/v1/bounties?${params.toString()}`);
+    return apiFetch(`/bounties?${params.toString()}`);
   },
 
   async get(idOrSlug: string): Promise<Bounty & { submissionStats: Array<{ status: string; count: number }> }> {
-    return apiFetch(`/api/v1/bounties/${idOrSlug}`);
+    return apiFetch(`/bounties/${idOrSlug}`);
   },
 
   async create(data: CreateBountyRequest): Promise<Bounty> {
-    return apiFetch("/api/v1/bounties", {
+    return apiFetch("/bounties", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
   async update(id: string, data: Partial<{ escrowTxHash: string; status: string }>): Promise<Bounty> {
-    return apiFetch(`/api/v1/bounties/${id}`, {
+    return apiFetch(`/bounties/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
     });
   },
 
   async cancel(id: string): Promise<Bounty> {
-    return apiFetch(`/api/v1/bounties/${id}`, {
+    return apiFetch(`/bounties/${id}`, {
       method: "DELETE",
     });
   },
 
   async refund(id: string): Promise<Bounty> {
-    return apiFetch(`/api/v1/bounties/${id}/refund`, {
+    return apiFetch(`/bounties/${id}/refund`, {
       method: "POST",
     });
   },
 
   async getSubmissions(id: string): Promise<{ bountyId: string; total: number; submissions: Submission[] }> {
-    return apiFetch(`/api/v1/bounties/${id}/submissions`);
+    return apiFetch(`/bounties/${id}/submissions`);
   },
 };
 
@@ -150,35 +151,35 @@ export const agents = {
         if (value !== undefined) params.append(key, String(value));
       });
     }
-    return apiFetch(`/api/v1/agents?${params.toString()}`);
+    return apiFetch(`/agents?${params.toString()}`);
   },
 
   async get(idOrName: string): Promise<Agent & { recentActivity: Submission[] }> {
-    return apiFetch(`/api/v1/agents/${idOrName}`);
+    return apiFetch(`/agents/${idOrName}`);
   },
 
   async register(data: RegisterAgentRequest): Promise<Agent> {
-    return apiFetch("/api/v1/agents", {
+    return apiFetch("/agents", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
   async update(id: string, data: Partial<RegisterAgentRequest>): Promise<Agent> {
-    return apiFetch(`/api/v1/agents/${id}`, {
+    return apiFetch(`/agents/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
     });
   },
 
   async deactivate(id: string): Promise<Agent> {
-    return apiFetch(`/api/v1/agents/${id}`, {
+    return apiFetch(`/agents/${id}`, {
       method: "DELETE",
     });
   },
 
   async verify(id: string): Promise<Agent> {
-    return apiFetch(`/api/v1/agents/${id}/verify`, {
+    return apiFetch(`/agents/${id}/verify`, {
       method: "POST",
     });
   },
@@ -190,18 +191,18 @@ export const agents = {
 
 export const submissions = {
   async submit(data: SubmitSolutionRequest): Promise<Submission> {
-    return apiFetch("/api/v1/submissions", {
+    return apiFetch("/submissions", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
   async get(id: string): Promise<Submission & { position: number }> {
-    return apiFetch(`/api/v1/submissions/${id}`);
+    return apiFetch(`/submissions/${id}`);
   },
 
   async getMySubmissions(): Promise<{ data: Submission[]; total: number }> {
-    return apiFetch("/api/v1/submissions/my/all");
+    return apiFetch("/submissions/my/all");
   },
 };
 
@@ -211,18 +212,18 @@ export const submissions = {
 
 export const comments = {
   async getForBounty(bountyId: string): Promise<{ bountyId: string; total: number; comments: Comment[] }> {
-    return apiFetch(`/api/v1/comments/bounty/${bountyId}`);
+    return apiFetch(`/comments/bounty/${bountyId}`);
   },
 
   async create(data: CreateCommentRequest & { bountyId: string }): Promise<Comment> {
-    return apiFetch("/api/v1/comments", {
+    return apiFetch("/comments", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
   async delete(id: string): Promise<{ message: string; id: string }> {
-    return apiFetch(`/api/v1/comments/${id}`, {
+    return apiFetch(`/comments/${id}`, {
       method: "DELETE",
     });
   },

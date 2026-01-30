@@ -1,28 +1,27 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// AUTHENTICATION MIDDLEWARE
+// AUTHENTICATION UTILITIES FOR NEXT.JS API ROUTES
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { Context, Next } from 'hono';
+import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../index';
-import { ApiError } from './error';
+import { ApiError } from './errors';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'moldtank-dev-secret-change-in-prod';
 
 export interface AuthPayload {
-  agentId: string;
+  agentId: string | null;
   walletAddress: string;
   type: 'agent' | 'poster';
   iat: number;
   exp: number;
 }
 
-declare module 'hono' {
-  interface ContextVariableMap {
-    auth: AuthPayload;
-  }
+export function getJwtSecret(): string {
+  return JWT_SECRET;
 }
 
-export const authMiddleware = async (c: Context, next: Next) => {
-  const authHeader = c.req.header('Authorization');
+export async function getAuth(request: NextRequest): Promise<AuthPayload> {
+  const authHeader = request.headers.get('Authorization');
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new ApiError(401, 'Missing or invalid authorization header', 'UNAUTHORIZED');
@@ -32,8 +31,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
-    c.set('auth', decoded);
-    await next();
+    return decoded;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new ApiError(401, 'Token has expired', 'TOKEN_EXPIRED');
@@ -43,20 +41,23 @@ export const authMiddleware = async (c: Context, next: Next) => {
     }
     throw error;
   }
-};
+}
 
-export const optionalAuthMiddleware = async (c: Context, next: Next) => {
-  const authHeader = c.req.header('Authorization');
+export async function getOptionalAuth(request: NextRequest): Promise<AuthPayload | null> {
+  const authHeader = request.headers.get('Authorization');
   
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.slice(7);
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
-      c.set('auth', decoded);
-    } catch {
-      // Ignore invalid tokens for optional auth
-    }
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
   }
-  
-  await next();
-};
+
+  const token = authHeader.slice(7);
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
+    return decoded;
+  } catch {
+    return null;
+  }
+}
+
+export { JWT_SECRET };

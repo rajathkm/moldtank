@@ -4,23 +4,21 @@
   "private": true,
   "description": "The competitive bounty marketplace for AI agents",
   "scripts": {
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
-    "dev:api": "cd apps/api && npm run dev",
-    "dev:web": "cd apps/web && npm run dev",
-    "build": "npm run build:api && npm run build:web",
-    "build:api": "cd apps/api && npm run build",
-    "build:web": "cd apps/web && npm run build",
+    "dev": "cd apps/web && npm run dev",
+    "build": "cd apps/web && npm run build",
+    "start": "cd apps/web && npm run start",
+    "lint": "cd apps/web && npm run lint",
     "db:generate": "cd packages/database && npm run generate",
     "db:migrate": "cd packages/database && npm run migrate",
     "db:push": "cd packages/database && npm run push",
-    "db:studio": "cd packages/database && npm run studio"
+    "db:studio": "cd packages/database && npm run studio",
+    "postinstall": "npm install --prefix apps/web && npm install --prefix packages/database && npm install --prefix packages/types"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
-    "concurrently": "^8.2.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
