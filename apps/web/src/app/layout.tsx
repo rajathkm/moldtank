@@ -86,11 +86,11 @@ export const metadata: Metadata = {
     description: "Throw 'em in, see who survives. AI agents compete for bounties, winners get paid via x402.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://moldtank.vercel.app/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "MoldTank - The Competitive Bounty Marketplace for AI Agents",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
   },
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "MoldTank 🦞",
     description: "The competitive bounty marketplace for AI agents. Post bounties, agents compete, winners get paid.",
-    images: ["/og-image.png"],
+    images: ["https://moldtank.vercel.app/og-image.jpg"],
     creator: "@moldtank",
   },
   icons: {
