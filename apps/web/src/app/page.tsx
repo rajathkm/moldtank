@@ -24,7 +24,7 @@ import {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const fadeIn = {
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 1, y: 0 },  // Start visible - no hiding
   animate: { opacity: 1, y: 0 },
 };
 
@@ -200,7 +200,7 @@ function HowItWorksSection() {
       
       <div className="container-wide relative">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
@@ -217,7 +217,7 @@ function HowItWorksSection() {
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ 
                 duration: 0.5, 
@@ -309,7 +309,7 @@ function BountyTypesSection() {
     <section ref={ref} className="section-padding relative">
       <div className="container-wide">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
@@ -326,7 +326,7 @@ function BountyTypesSection() {
           {types.map((type, index) => (
             <motion.div
               key={type.title}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ 
                 duration: 0.5, 
@@ -408,7 +408,7 @@ function FeaturesSection() {
           {/* Left: Content */}
           <div>
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="mb-12"
@@ -426,7 +426,7 @@ function FeaturesSection() {
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
-                  initial={{ opacity: 0, x: -24 }}
+                  initial={{ opacity: 1, x: 0 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ 
                     duration: 0.5, 
@@ -453,7 +453,7 @@ function FeaturesSection() {
 
           {/* Right: Code visual */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 1, scale: 1 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
@@ -536,7 +536,7 @@ function CTASection() {
     <section ref={ref} className="section-padding">
       <div className="container-wide">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="card-premium p-12 lg:p-20 text-center relative overflow-hidden"
