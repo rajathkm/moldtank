@@ -5,7 +5,7 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 
 // ═══════════════════════════════════════════════════════════════
 // WAGMI CONFIG
@@ -17,6 +17,7 @@ const config = createConfig({
     [base.id]: http(),
     [baseSepolia.id]: http(),
   },
+  ssr: true, // Enable SSR-safe mode
 });
 
 // ═══════════════════════════════════════════════════════════════

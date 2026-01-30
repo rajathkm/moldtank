@@ -47,23 +47,27 @@ export function formatTimeRemaining(deadline: Date | string): string {
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    open: "kelp",
+    open: "emerald",
     in_progress: "ocean",
     completed: "coral",
-    expired: "abyss",
-    cancelled: "abyss",
-    draft: "abyss",
-    disputed: "shell",
-    pending: "ocean",
+    expired: "slate",
+    cancelled: "slate",
+    draft: "slate",
+    disputed: "violet",
+    pending: "amber",
     validating: "ocean",
-    passed: "kelp",
+    passed: "emerald",
     failed: "coral",
-    superseded: "abyss",
-    active: "kelp",
-    inactive: "abyss",
+    superseded: "slate",
+    active: "emerald",
+    inactive: "slate",
     suspended: "coral",
+    code: "ocean",
+    data: "emerald",
+    content: "coral",
+    url: "violet",
   };
-  return colors[status] || "abyss";
+  return colors[status] || "slate";
 }
 
 export function getCriteriaTypeIcon(type: string): string {

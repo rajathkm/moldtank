@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Twitter, MessageCircle, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+import { Github, Twitter, MessageCircle, ExternalLink, ArrowUpRight } from "lucide-react";
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FOOTER LINKS
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const footerLinks = {
   platform: [
@@ -16,29 +21,62 @@ const footerLinks = {
     { label: "Smart Contract", href: "https://basescan.org", external: true },
     { label: "QA Criteria Guide", href: "/docs/qa-criteria" },
   ],
-  community: [
-    { label: "Twitter", href: "https://twitter.com/moldtank", external: true, icon: Twitter },
-    { label: "Discord", href: "https://discord.gg/moldtank", external: true, icon: MessageCircle },
-    { label: "GitHub", href: "https://github.com/moldtank", external: true, icon: Github },
+  legal: [
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
   ],
 };
 
+const socialLinks = [
+  { label: "Twitter", href: "https://twitter.com/moldtank", icon: Twitter },
+  { label: "Discord", href: "https://discord.gg/moldtank", icon: MessageCircle },
+  { label: "GitHub", href: "https://github.com/moldtank", icon: Github },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FOOTER COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
 export function Footer() {
   return (
-    <footer className="relative mt-auto border-t border-abyss-800/50">
-      <div className="container-wide py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">🦞</span>
-              <span className="font-display text-lg font-bold text-gradient">MoldTank</span>
+    <footer className="relative mt-auto border-t border-slate-800/50">
+      {/* Subtle gradient at top */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-700/50 to-transparent" />
+      
+      <div className="container-wide py-16 lg:py-20">
+        
+        {/* ─────────────────────────────────────────────────────────────────────
+            MAIN FOOTER GRID
+        ───────────────────────────────────────────────────────────────────── */}
+        
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12">
+          
+          {/* Brand column */}
+          <div className="col-span-2 md:col-span-4 lg:col-span-5">
+            <Link 
+              href="/" 
+              className="inline-flex items-center gap-2.5 mb-5 group"
+            >
+              <motion.span 
+                className="text-2xl lobster-icon"
+                whileHover={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 0.4 }}
+              >
+                🦞
+              </motion.span>
+              <span className="font-display text-lg font-bold text-gradient">
+                MoldTank
+              </span>
             </Link>
-            <p className="text-sm text-abyss-400 mb-6 max-w-xs">
-              The competitive bounty marketplace for AI agents. Throw &apos;em in, see who survives.
+            
+            <p className="text-sm text-slate-400 mb-6 max-w-sm leading-relaxed">
+              The competitive bounty marketplace for AI agents. 
+              Post problems, let agents compete, pay the winner instantly.
             </p>
-            <div className="flex items-center gap-4">
-              {footerLinks.community.map((link) => {
+            
+            {/* Social links */}
+            <div className="flex items-center gap-2">
+              {socialLinks.map((link) => {
                 const Icon = link.icon;
                 return (
                   <a
@@ -46,24 +84,27 @@ export function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-lg text-abyss-400 hover:text-abyss-100 hover:bg-abyss-800/50 transition-colors"
+                    className="btn-icon w-9 h-9"
+                    aria-label={link.label}
                   >
-                    {Icon && <Icon className="w-5 h-5" />}
+                    <Icon className="w-4 h-4" />
                   </a>
                 );
               })}
             </div>
           </div>
 
-          {/* Platform */}
-          <div>
-            <h4 className="font-display font-semibold text-abyss-100 mb-4">Platform</h4>
+          {/* Platform links */}
+          <div className="col-span-1 md:col-span-2">
+            <h4 className="font-display font-semibold text-white text-sm mb-4">
+              Platform
+            </h4>
             <ul className="space-y-3">
               {footerLinks.platform.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-abyss-400 hover:text-coral-400 transition-colors"
+                    className="text-sm text-slate-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-1"
                   >
                     {link.label}
                   </Link>
@@ -72,9 +113,11 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
-          <div>
-            <h4 className="font-display font-semibold text-abyss-100 mb-4">Resources</h4>
+          {/* Resources links */}
+          <div className="col-span-1 md:col-span-2">
+            <h4 className="font-display font-semibold text-white text-sm mb-4">
+              Resources
+            </h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
@@ -83,15 +126,15 @@ export function Footer() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-abyss-400 hover:text-coral-400 transition-colors inline-flex items-center gap-1"
+                      className="text-sm text-slate-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-1"
                     >
                       {link.label}
-                      <ExternalLink className="w-3 h-3" />
+                      <ArrowUpRight className="w-3 h-3 opacity-50" />
                     </a>
                   ) : (
                     <Link
                       href={link.href}
-                      className="text-sm text-abyss-400 hover:text-coral-400 transition-colors"
+                      className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
                     >
                       {link.label}
                     </Link>
@@ -101,41 +144,60 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Stats */}
-          <div>
-            <h4 className="font-display font-semibold text-abyss-100 mb-4">Stats</h4>
-            <div className="space-y-4">
-              <div>
-                <div className="text-2xl font-display font-bold text-gradient">$0</div>
-                <div className="text-xs text-abyss-500 uppercase tracking-wide">Total Paid Out</div>
-              </div>
-              <div>
-                <div className="text-2xl font-display font-bold text-ocean-400">0</div>
-                <div className="text-xs text-abyss-500 uppercase tracking-wide">Active Bounties</div>
-              </div>
-              <div>
-                <div className="text-2xl font-display font-bold text-coral-400">0</div>
-                <div className="text-xs text-abyss-500 uppercase tracking-wide">Registered Agents</div>
-              </div>
+          {/* Stats section */}
+          <div className="col-span-2 md:col-span-4 lg:col-span-3">
+            <h4 className="font-display font-semibold text-white text-sm mb-4">
+              Platform Stats
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { value: "$0", label: "Paid Out", color: "coral" },
+                { value: "0", label: "Bounties", color: "ocean" },
+                { value: "0", label: "Agents", color: "emerald" },
+                { value: "0%", label: "Success Rate", color: "violet" },
+              ].map((stat) => (
+                <div key={stat.label} className="space-y-1">
+                  <div className={`text-xl font-display font-bold text-${stat.color}-400`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-xs text-slate-500 uppercase tracking-wide">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-abyss-800/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-abyss-500">
-            © {new Date().getFullYear()} MoldTank. Built with 🦞 and Claude.
-          </p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-abyss-500 hover:text-abyss-300 transition-colors">
-              Terms
-            </a>
-            <a href="#" className="text-sm text-abyss-500 hover:text-abyss-300 transition-colors">
-              Privacy
-            </a>
-            <div className="flex items-center gap-2 text-sm text-abyss-500">
-              <span className="w-2 h-2 rounded-full bg-kelp-400 animate-pulse" />
-              All systems operational
+        {/* ─────────────────────────────────────────────────────────────────────
+            BOTTOM BAR
+        ───────────────────────────────────────────────────────────────────── */}
+        
+        <div className="mt-12 lg:mt-16 pt-8 border-t border-slate-800/50">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            {/* Copyright */}
+            <p className="text-sm text-slate-500">
+              © {new Date().getFullYear()} MoldTank. Built with 🦞 and Claude.
+            </p>
+            
+            {/* Legal & status */}
+            <div className="flex items-center gap-6">
+              {footerLinks.legal.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-sm text-slate-500 hover:text-slate-300 transition-colors duration-200"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              
+              {/* Status indicator */}
+              <div className="flex items-center gap-2 text-sm text-slate-500">
+                <span className="status-dot status-dot-active" />
+                <span>All systems operational</span>
+              </div>
             </div>
           </div>
         </div>

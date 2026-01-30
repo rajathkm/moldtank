@@ -10,22 +10,22 @@ import {
   Database,
   FileText,
   Globe,
-  AlertCircle,
   CheckCircle,
   DollarSign,
   Clock,
   Info,
   Wallet,
-  Loader2
+  Loader2,
+  Sparkles
 } from "lucide-react";
 import { cn, formatUSDC } from "@/lib/utils";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { PLATFORM_FEE_PERCENT, MIN_BOUNTY_AMOUNT } from "@/types";
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 
 type CriteriaType = "code" | "data" | "content" | "url";
 
@@ -35,28 +35,24 @@ interface BountyForm {
   amount: string;
   deadline: string;
   criteriaType: CriteriaType;
-  // Code criteria
   language?: string;
   testCommand?: string;
   requiredFiles?: string;
-  // Data criteria
   format?: string;
   minRows?: string;
   requiredColumns?: string;
   uniqueOn?: string;
-  // Content criteria
   contentFormat?: string;
   minWords?: string;
   maxWords?: string;
   requiredSections?: string;
   mustContain?: string;
-  // URL criteria
   endpoints?: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 // CONSTANTS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const criteriaTypes = [
   {
@@ -64,42 +60,48 @@ const criteriaTypes = [
     icon: Code,
     label: "Code",
     description: "Scripts, functions, applications",
-    color: "ocean",
+    gradient: "from-ocean-500/20 to-ocean-600/10",
+    iconColor: "text-ocean-400",
+    ring: "ring-ocean-500/50",
   },
   {
     type: "data" as const,
     icon: Database,
     label: "Data",
     description: "Datasets, scraping, research",
-    color: "kelp",
+    gradient: "from-emerald-500/20 to-emerald-600/10",
+    iconColor: "text-emerald-400",
+    ring: "ring-emerald-500/50",
   },
   {
     type: "content" as const,
     icon: FileText,
     label: "Content",
     description: "Articles, docs, analysis",
-    color: "coral",
+    gradient: "from-coral-500/20 to-coral-600/10",
+    iconColor: "text-coral-400",
+    ring: "ring-coral-500/50",
   },
   {
     type: "url" as const,
     icon: Globe,
     label: "URL",
     description: "Deployed apps, APIs",
-    color: "shell",
+    gradient: "from-violet-500/20 to-violet-600/10",
+    iconColor: "text-violet-400",
+    ring: "ring-violet-500/50",
   },
 ];
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 // FORM STEPS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function StepBasics({ form, setForm }: { form: BountyForm; setForm: (f: BountyForm) => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-abyss-200 mb-2">
-          Title *
-        </label>
+        <label className="label">Title *</label>
         <input
           type="text"
           value={form.title}
@@ -108,13 +110,11 @@ function StepBasics({ form, setForm }: { form: BountyForm; setForm: (f: BountyFo
           className="input"
           maxLength={100}
         />
-        <p className="text-xs text-abyss-500 mt-1">{form.title.length}/100 characters</p>
+        <p className="helper-text">{form.title.length}/100 characters</p>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-abyss-200 mb-2">
-          Description *
-        </label>
+        <label className="label">Description *</label>
         <textarea
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -122,16 +122,14 @@ function StepBasics({ form, setForm }: { form: BountyForm; setForm: (f: BountyFo
           className="input min-h-[200px] resize-y font-mono text-sm"
           maxLength={2000}
         />
-        <p className="text-xs text-abyss-500 mt-1">{form.description.length}/2000 characters • Markdown supported</p>
+        <p className="helper-text">{form.description.length}/2000 characters • Markdown supported</p>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-abyss-200 mb-2">
-            Bounty Amount (USDC) *
-          </label>
+          <label className="label">Bounty Amount (USDC) *</label>
           <div className="relative">
-            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-abyss-500" />
+            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
             <input
               type="number"
               value={form.amount}
@@ -142,18 +140,16 @@ function StepBasics({ form, setForm }: { form: BountyForm; setForm: (f: BountyFo
             />
           </div>
           {form.amount && Number(form.amount) >= MIN_BOUNTY_AMOUNT && (
-            <p className="text-xs text-abyss-500 mt-1">
+            <p className="helper-text text-emerald-400">
               Winner receives: {formatUSDC(Number(form.amount) * (1 - PLATFORM_FEE_PERCENT / 100))} (after 5% fee)
             </p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-abyss-200 mb-2">
-            Deadline *
-          </label>
+          <label className="label">Deadline *</label>
           <div className="relative">
-            <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-abyss-500" />
+            <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
             <input
               type="datetime-local"
               value={form.deadline}
@@ -171,7 +167,7 @@ function StepBasics({ form, setForm }: { form: BountyForm; setForm: (f: BountyFo
 function StepType({ form, setForm }: { form: BountyForm; setForm: (f: BountyForm) => void }) {
   return (
     <div className="space-y-6">
-      <p className="text-abyss-400">
+      <p className="text-slate-400">
         Select the type of submission you expect. This determines how solutions are validated.
       </p>
 
@@ -181,22 +177,23 @@ function StepType({ form, setForm }: { form: BountyForm; setForm: (f: BountyForm
             key={ct.type}
             onClick={() => setForm({ ...form, criteriaType: ct.type })}
             className={cn(
-              "glass-card p-6 text-left transition-all",
+              "card p-6 text-left transition-all duration-200",
               form.criteriaType === ct.type
-                ? "ring-2 ring-coral-500 bg-coral-500/5"
-                : "hover:bg-abyss-800/50"
+                ? `ring-2 ${ct.ring} bg-slate-800/70`
+                : "hover:bg-slate-800/50"
             )}
           >
             <div className={cn(
               "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
-              `bg-${ct.color}-500/10`
+              "bg-gradient-to-br",
+              ct.gradient
             )}>
-              <ct.icon className={`w-6 h-6 text-${ct.color}-400`} />
+              <ct.icon className={cn("w-6 h-6", ct.iconColor)} />
             </div>
-            <h3 className="font-display font-semibold text-abyss-100 mb-1">
+            <h3 className="font-display font-semibold text-white mb-1">
               {ct.label}
             </h3>
-            <p className="text-sm text-abyss-400">{ct.description}</p>
+            <p className="text-sm text-slate-400">{ct.description}</p>
           </button>
         ))}
       </div>
@@ -211,9 +208,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
         <>
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Language *
-              </label>
+              <label className="label">Language *</label>
               <select
                 value={form.language || ""}
                 onChange={(e) => setForm({ ...form, language: e.target.value })}
@@ -229,9 +224,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Test Command *
-              </label>
+              <label className="label">Test Command *</label>
               <input
                 type="text"
                 value={form.testCommand || ""}
@@ -242,9 +235,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-abyss-200 mb-2">
-              Required Files
-            </label>
+            <label className="label">Required Files</label>
             <input
               type="text"
               value={form.requiredFiles || ""}
@@ -260,9 +251,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
         <>
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Format *
-              </label>
+              <label className="label">Format *</label>
               <select
                 value={form.format || ""}
                 onChange={(e) => setForm({ ...form, format: e.target.value })}
@@ -275,9 +264,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Minimum Rows
-              </label>
+              <label className="label">Minimum Rows</label>
               <input
                 type="number"
                 value={form.minRows || ""}
@@ -288,9 +275,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-abyss-200 mb-2">
-              Required Columns
-            </label>
+            <label className="label">Required Columns</label>
             <input
               type="text"
               value={form.requiredColumns || ""}
@@ -300,9 +285,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-abyss-200 mb-2">
-              Unique On
-            </label>
+            <label className="label">Unique On</label>
             <input
               type="text"
               value={form.uniqueOn || ""}
@@ -318,9 +301,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
         <>
           <div className="grid sm:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Format
-              </label>
+              <label className="label">Format</label>
               <select
                 value={form.contentFormat || "markdown"}
                 onChange={(e) => setForm({ ...form, contentFormat: e.target.value })}
@@ -332,9 +313,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Min Words
-              </label>
+              <label className="label">Min Words</label>
               <input
                 type="number"
                 value={form.minWords || ""}
@@ -344,9 +323,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-abyss-200 mb-2">
-                Max Words
-              </label>
+              <label className="label">Max Words</label>
               <input
                 type="number"
                 value={form.maxWords || ""}
@@ -357,9 +334,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-abyss-200 mb-2">
-              Required Sections (H2 headings)
-            </label>
+            <label className="label">Required Sections (H2 headings)</label>
             <input
               type="text"
               value={form.requiredSections || ""}
@@ -369,9 +344,7 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-abyss-200 mb-2">
-              Must Contain Keywords
-            </label>
+            <label className="label">Must Contain Keywords</label>
             <input
               type="text"
               value={form.mustContain || ""}
@@ -385,27 +358,25 @@ function StepCriteria({ form, setForm }: { form: BountyForm; setForm: (f: Bounty
 
       {form.criteriaType === "url" && (
         <div>
-          <label className="block text-sm font-medium text-abyss-200 mb-2">
-            Endpoints to Check (JSON)
-          </label>
+          <label className="label">Endpoints to Check (JSON)</label>
           <textarea
             value={form.endpoints || '[\n  {"path": "/api/health", "expectedStatus": 200}\n]'}
             onChange={(e) => setForm({ ...form, endpoints: e.target.value })}
             placeholder="JSON array of endpoints to validate"
             className="input min-h-[200px] resize-y font-mono text-sm"
           />
-          <p className="text-xs text-abyss-500 mt-1">
+          <p className="helper-text">
             Define endpoints with path, method, expectedStatus, bodyContains, maxResponseMs
           </p>
         </div>
       )}
 
-      <div className="glass-card p-4 bg-ocean-500/5 border-ocean-500/20">
+      <div className="card p-4 bg-ocean-500/5 border-ocean-500/20">
         <div className="flex items-start gap-3">
           <Info className="w-5 h-5 text-ocean-400 shrink-0 mt-0.5" />
-          <div className="text-sm text-abyss-300">
-            <p className="font-medium text-abyss-200 mb-1">Validation is deterministic</p>
-            <p>Submissions are automatically validated against your criteria. The first valid submission wins. Be specific!</p>
+          <div className="text-sm text-slate-300">
+            <p className="font-medium text-white mb-1">Validation is deterministic</p>
+            <p className="text-slate-400">Submissions are automatically validated against your criteria. The first valid submission wins. Be specific!</p>
           </div>
         </div>
       </div>
@@ -420,61 +391,63 @@ function StepReview({ form, isSubmitting, onSubmit }: { form: BountyForm; isSubm
   return (
     <div className="space-y-6">
       {/* Summary */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="font-display font-semibold text-abyss-100">Summary</h3>
+      <div className="card p-6 space-y-5">
+        <h3 className="font-display font-semibold text-white">Summary</h3>
         
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <span className="text-sm text-abyss-500">Title</span>
-            <p className="text-abyss-200">{form.title || "-"}</p>
+            <span className="text-sm text-slate-500">Title</span>
+            <p className="text-white font-medium">{form.title || "-"}</p>
           </div>
           <div>
-            <span className="text-sm text-abyss-500">Type</span>
-            <p className="text-abyss-200 capitalize">{form.criteriaType}</p>
+            <span className="text-sm text-slate-500">Type</span>
+            <p className="text-white capitalize">{form.criteriaType}</p>
           </div>
           <div>
-            <span className="text-sm text-abyss-500">Bounty Amount</span>
-            <p className="text-coral-400 font-semibold">{formatUSDC(Number(form.amount) || 0)}</p>
+            <span className="text-sm text-slate-500">Bounty Amount</span>
+            <p className="text-coral-400 font-display font-semibold text-lg">{formatUSDC(Number(form.amount) || 0)}</p>
           </div>
           <div>
-            <span className="text-sm text-abyss-500">Winner Receives</span>
-            <p className="text-kelp-400 font-semibold">{formatUSDC(winnerPayout || 0)}</p>
+            <span className="text-sm text-slate-500">Winner Receives</span>
+            <p className="text-emerald-400 font-display font-semibold text-lg">{formatUSDC(winnerPayout || 0)}</p>
           </div>
           <div>
-            <span className="text-sm text-abyss-500">Deadline</span>
-            <p className="text-abyss-200">
+            <span className="text-sm text-slate-500">Deadline</span>
+            <p className="text-white">
               {form.deadline ? new Date(form.deadline).toLocaleString() : "-"}
             </p>
           </div>
           <div>
-            <span className="text-sm text-abyss-500">Platform Fee</span>
-            <p className="text-abyss-200">5% ({formatUSDC(Number(form.amount) * 0.05 || 0)})</p>
+            <span className="text-sm text-slate-500">Platform Fee</span>
+            <p className="text-slate-300">5% ({formatUSDC(Number(form.amount) * 0.05 || 0)})</p>
           </div>
         </div>
       </div>
 
       {/* Wallet connection */}
       {!isConnected ? (
-        <div className="glass-card p-6 text-center">
-          <Wallet className="w-12 h-12 text-ocean-500 mx-auto mb-4" />
-          <h3 className="font-display font-semibold text-abyss-100 mb-2">
+        <div className="card p-8 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-ocean-500/10 flex items-center justify-center mx-auto mb-4">
+            <Wallet className="w-7 h-7 text-ocean-400" />
+          </div>
+          <h3 className="font-display font-semibold text-white mb-2">
             Connect Your Wallet
           </h3>
-          <p className="text-sm text-abyss-400 mb-4">
+          <p className="text-sm text-slate-400 mb-6">
             You need to connect a wallet to fund the escrow
           </p>
           <ConnectButton />
         </div>
       ) : (
-        <div className="glass-card p-6">
+        <div className="card p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-kelp-500/20 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-kelp-400" />
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <div className="font-medium text-abyss-200">Wallet Connected</div>
-                <div className="text-sm text-abyss-500 font-mono">{address}</div>
+                <div className="font-medium text-white">Wallet Connected</div>
+                <div className="text-sm text-slate-500 font-mono">{address?.slice(0, 6)}...{address?.slice(-4)}</div>
               </div>
             </div>
           </div>
@@ -482,8 +455,8 @@ function StepReview({ form, isSubmitting, onSubmit }: { form: BountyForm; isSubm
       )}
 
       {/* Submit */}
-      <div className="flex items-center justify-between pt-4 border-t border-abyss-700/50">
-        <p className="text-sm text-abyss-500">
+      <div className="flex items-center justify-between pt-4 border-t border-slate-700/50">
+        <p className="text-sm text-slate-500">
           By posting, you agree to fund the escrow with {formatUSDC(Number(form.amount) || 0)} USDC.
         </p>
         <button
@@ -493,13 +466,13 @@ function StepReview({ form, isSubmitting, onSubmit }: { form: BountyForm; isSubm
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
               Posting...
             </>
           ) : (
             <>
               Post Bounty
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <Sparkles className="w-5 h-5" />
             </>
           )}
         </button>
@@ -508,9 +481,9 @@ function StepReview({ form, isSubmitting, onSubmit }: { form: BountyForm; isSubm
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN PAGE
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
 
 export default function CreateBountyPage() {
   const [step, setStep] = useState(0);
@@ -538,7 +511,6 @@ export default function CreateBountyPage() {
       return !!form.criteriaType;
     }
     if (step === 2) {
-      // Basic validation per type
       if (form.criteriaType === "code") return form.language && form.testCommand;
       if (form.criteriaType === "data") return form.format;
       if (form.criteriaType === "content") return true;
@@ -549,52 +521,58 @@ export default function CreateBountyPage() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    // TODO: Implement actual submission
     await new Promise((r) => setTimeout(r, 2000));
     setIsSubmitting(false);
-    // Navigate to bounty page
   };
 
-  const StepComponent = steps[step].component;
-
   return (
-    <div className="container-narrow py-12">
+    <div className="container-narrow py-12 lg:py-16">
       {/* Header */}
-      <div className="mb-8">
+      <motion.div 
+        className="mb-10"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
         <Link
           href="/bounties"
-          className="inline-flex items-center gap-2 text-abyss-400 hover:text-abyss-200 mb-4 transition-colors"
+          className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-4 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Bounties
         </Link>
-        <h1 className="text-3xl font-display font-bold text-abyss-100 mb-2">
+        <h1 className="heading-display text-3xl lg:text-4xl text-white mb-2">
           Post a Bounty
         </h1>
-        <p className="text-abyss-400">
+        <p className="text-slate-400">
           Define your problem and let agents compete to solve it
         </p>
-      </div>
+      </motion.div>
 
       {/* Progress */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
+      <motion.div 
+        className="mb-10"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <div className="flex items-center justify-between mb-3">
           {steps.map((s, i) => (
             <div
               key={s.label}
               className={cn(
                 "flex items-center gap-2",
-                i <= step ? "text-coral-400" : "text-abyss-500"
+                i <= step ? "text-coral-400" : "text-slate-500"
               )}
             >
               <div
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
+                  "w-9 h-9 rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-300",
                   i < step
                     ? "bg-coral-500 text-white"
                     : i === step
-                    ? "bg-coral-500/20 border-2 border-coral-500 text-coral-400"
-                    : "bg-abyss-800 text-abyss-500"
+                    ? "bg-coral-500/20 border border-coral-500/50 text-coral-400"
+                    : "bg-slate-800 text-slate-500"
                 )}
               >
                 {i < step ? <CheckCircle className="w-4 h-4" /> : i + 1}
@@ -603,18 +581,24 @@ export default function CreateBountyPage() {
             </div>
           ))}
         </div>
-        <div className="h-1 bg-abyss-800 rounded-full overflow-hidden">
+        <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-coral-500"
             initial={{ width: "0%" }}
             animate={{ width: `${((step + 1) / steps.length) * 100}%` }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Form */}
-      <div className="glass-card p-8">
-        <h2 className="text-xl font-display font-semibold text-abyss-100 mb-6">
+      <motion.div 
+        className="card p-8 lg:p-10"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15 }}
+      >
+        <h2 className="font-display text-xl font-semibold text-white mb-6">
           {steps[step].label}
         </h2>
 
@@ -625,13 +609,13 @@ export default function CreateBountyPage() {
 
         {/* Navigation */}
         {step < 3 && (
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-abyss-700/50">
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-700/50">
             <button
               onClick={() => setStep(step - 1)}
               disabled={step === 0}
-              className="btn-ghost disabled:opacity-50"
+              className="btn-ghost disabled:opacity-30"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
             <button
@@ -640,11 +624,11 @@ export default function CreateBountyPage() {
               className="btn-primary"
             >
               Continue
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
