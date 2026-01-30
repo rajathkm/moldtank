@@ -8,16 +8,27 @@
     ".": {
       "import": "./src/index.ts",
       "types": "./src/index.ts"
+    },
+    "./supabase": {
+      "import": "./src/supabase.ts",
+      "types": "./src/supabase.ts"
+    },
+    "./types": {
+      "import": "./src/types.ts",
+      "types": "./src/types.ts"
     }
   },
   "scripts": {
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "push": "drizzle-kit push",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@moldtank/types": "*",
+    "@supabase/supabase-js": "^2.45.0",
     "drizzle-orm": "^0.45.1",
     "postgres": "^3.4.8"
   },
